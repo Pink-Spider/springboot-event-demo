@@ -1,5 +1,11 @@
 # Spring Event Demo
 
+[![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/projects/jdk/25/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.1-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Gradle](https://img.shields.io/badge/Gradle-9.8.2-02303A?logo=gradle&logoColor=white)](https://gradle.org)
+[![H2](https://img.shields.io/badge/H2-in--memory-1F6FEB)](https://www.h2database.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
 Spring Boot에서 `ApplicationEventPublisher`를 활용한 이벤트 기반 아키텍처 예제입니다.
 
 ## 기술 스택
