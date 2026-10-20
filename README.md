@@ -2,6 +2,17 @@
 
 Spring Boot에서 `ApplicationEventPublisher`를 활용한 이벤트 기반 아키텍처 예제입니다.
 
+## 기술 스택
+
+| 항목 | 버전 |
+|------|------|
+| Java | 25 (Gradle toolchain) |
+| Spring Boot | 4.1.1 |
+| Gradle | 9.8.2 (wrapper) |
+| DB | H2 (in-memory) |
+
+> Spring Boot 3.x 기반 코드는 [`spring-boot-3x`](https://github.com/Pink-Spider/springboot-event-demo/tree/spring-boot-3x) 브랜치에 있습니다.
+
 ## 프로젝트 구조
 
 ```
@@ -13,7 +24,7 @@ src/main/java/io/pinkspider/springeventdemo/
     │   └── SignUpController.java  # REST API 엔드포인트
     ├── event/
     │   └── UserSignedUpEvent.java # 이벤트 정의
-    ├── listener/
+    ├── listner/
     │   ├── AuditLogListener.java      # 동기 리스너
     │   ├── WelcomeEmailListener.java  # 비동기 리스너
     │   └── PostCommitListener.java    # 트랜잭션 커밋 후 리스너
@@ -169,6 +180,9 @@ public class PostCommitListener {
 curl -X POST "http://localhost:8080/api/users/signup?email=test@co.kr&name=YG"
 ```
 
+JDK 25가 설치되어 있지 않아도 Gradle toolchain(foojay resolver)이 자동으로 내려받습니다.
+H2 콘솔은 http://localhost:8080/h2-console 에서 확인할 수 있습니다 (JDBC URL: `jdbc:h2:mem:testdb`).
+
 ## 예상 로그 출력
 
 ```
@@ -196,7 +210,21 @@ AFTER_COMMIT: create coupon for userId=1
 2. **비동기 리스너 트랜잭션**: `@Async` 리스너는 별도 트랜잭션이므로 Publisher의 롤백과 무관하게 실행됩니다.
 3. **TransactionalEventListener 주의**: 트랜잭션이 없는 컨텍스트에서 발행된 이벤트는 기본적으로 무시됩니다. `fallbackExecution = true` 옵션으로 변경 가능합니다.
 
+## Spring Boot 3 → 4 마이그레이션 요약
+
+| 변경 | Boot 3.x | Boot 4.x |
+|------|----------|----------|
+| Web 스타터 | `spring-boot-starter-web` | `spring-boot-starter-webmvc` |
+| H2 콘솔 | 자동 설정 내장 | `spring-boot-h2console` 모듈 추가 필요 |
+| AOP 스타터 | `spring-boot-starter-aop` | 제거 (`@Async`는 spring-context의 프록시만으로 동작, AspectJ 불필요) |
+| 테스트 | `spring-boot-starter-test` | 동일 + Gradle 9 대응 `junit-platform-launcher` 추가 |
+| Java / Gradle | 23 / 8.14.3 | 25 / 9.8.2 |
+
 ## 참고 자료
 
 - [Spring Framework - Application Events](https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html#context-functionality-events)
 - [Spring Boot - @Async](https://docs.spring.io/spring-framework/reference/integration/scheduling.html#scheduling-annotation-support-async)
+
+## License
+
+[MIT](LICENSE)
